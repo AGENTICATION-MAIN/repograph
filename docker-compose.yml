@@ -1,24 +1,14 @@
 version: '3.8'
 
 services:
-  aegis-kernel:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: aegis-kernel-runtime
+  pactum-node-1:
+    build: .
+    container_name: pactum-node-billing
     ports:
       - "8000:8000"
     environment:
-      - AEGIS_HOST=0.0.0.0
-      - AEGIS_PORT=8000
-      - AEGIS_ENV=production
-      - AEGIS_LOG_LEVEL=INFO
-      - AEGIS_SECRET_KEY=${AEGIS_SECRET_KEY:-aegis-production-secret-key-replace-in-env-32bytes}
-      - AEGIS_STRICT_INVARIANTS=true
-      - AEGIS_TAINT_TRACKING=true
-    volumes:
-      - aegis-ledger-data:/app/data
+      - PACTUM_HOST=0.0.0.0
+      - PACTUM_PORT=8000
+      - PACTUM_ENV=production
+      - PACTUM_SECRET_KEY=${PACTUM_SECRET_KEY:-pactum-secret-key-32bytes-for-coasian-barter-kernel}
     restart: unless-stopped
-
-volumes:
-  aegis-ledger-data:

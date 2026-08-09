@@ -29,13 +29,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
 
-      - name: Run Test Suite & Benchmarks
+      - name: Run Test Suite
         run: |
           pytest -v --durations=10
 
-      - name: Run Example Scenarios
+      - name: Run Performance Benchmarks
         run: |
-          python examples/01_quickstart.py
-          python examples/02_financial_agent_guard.py
-          python examples/03_prompt_injection_defense.py
-          python examples/04_merkle_audit_verification.py
+          pactum benchmark -n 1000
+
+      - name: Run Example Workflows
+        run: |
+          python examples/01_basic_two_service_barter.py
+          python examples/02_cross_api_rate_limit_rebalancing.py
+          python examples/03_gpu_vram_for_priority_queue_swap.py
+          python examples/04_dynamic_equilibrium_market.py

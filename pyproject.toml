@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "aegis-kernel"
+name = "pactum-kernel"
 version = "0.1.0"
-description = "High-Assurance Runtime & Deterministic Verification Engine for Autonomous AI Agents"
+description = "Coasian Micro-Resource Bartering & Ephemeral Capability Exchange Kernel for Distributed Systems"
 readme = "README.md"
 authors = [{ name = "Agentication-MAIN", email = "agentication-main@users.noreply.github.com" }]
 license = { text = "Apache-2.0" }
@@ -19,18 +19,17 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
-    "Topic :: Security",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: System :: Distributed Computing",
+    "Topic :: Scientific/Engineering :: Mathematics",
 ]
 keywords = [
-    "ai-agents",
-    "guardrails",
-    "deterministic-verification",
-    "taint-tracking",
-    "merkle-tree",
-    "capability-security",
-    "llm-security",
-    "neuro-symbolic",
+    "coase-theorem",
+    "nash-bargaining",
+    "micro-resource-bartering",
+    "capability-escrow",
+    "distributed-systems",
+    "rate-limit-rebalancing",
+    "pareto-efficiency",
 ]
 requires-python = ">=3.10"
 dependencies = [
@@ -46,12 +45,10 @@ dev = [
     "pytest>=8.0.0",
     "httpx>=0.27.0",
     "pytest-cov>=4.1.0",
-    "ruff>=0.3.0",
-    "mypy>=1.9.0",
 ]
 
 [project.scripts]
-aegis = "aegis.cli.main:main"
+pactum = "pactum.cli.main:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -1,4 +1,4 @@
-.PHONY: install test lint format benchmark demo serve clean docker-build
+.PHONY: install test benchmark demo serve examples docker-build clean
 
 install:
 	pip install -e ".[dev]"
@@ -7,22 +7,22 @@ test:
 	pytest -v --durations=10
 
 benchmark:
-	pytest tests/benchmarks/ -s
+	pactum benchmark -n 2000
 
 demo:
-	python -m aegis demo
+	pactum demo
 
 serve:
-	python -m aegis serve --host 0.0.0.0 --port 8000
+	pactum serve --host 0.0.0.0 --port 8000
 
 examples:
-	python examples/01_quickstart.py
-	python examples/02_financial_agent_guard.py
-	python examples/03_prompt_injection_defense.py
-	python examples/04_merkle_audit_verification.py
+	python examples/01_basic_two_service_barter.py
+	python examples/02_cross_api_rate_limit_rebalancing.py
+	python examples/03_gpu_vram_for_priority_queue_swap.py
+	python examples/04_dynamic_equilibrium_market.py
 
 docker-build:
-	docker build -t aegis-kernel:latest .
+	docker build -t pactum-kernel:latest .
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +

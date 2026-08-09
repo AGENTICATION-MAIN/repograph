@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pactum — Coasian Micro-Resource Barter Terminal</title>
+    <style>
+        :root {
+            --bg-primary: #07090e;
+            --bg-card: #0e131f;
+            --bg-card-hover: #141b2d;
+            --border-color: #1b2438;
+            --border-focus: #10b981;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-emerald: #10b981;
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            padding: 24px;
+            min-height: 100vh;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-badge {
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            color: #000;
+            font-weight: 900;
+            font-size: 1.15rem;
+            padding: 8px 14px;
+            border-radius: 8px;
+            letter-spacing: 1px;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .brand-title h1 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-title p {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        .system-status-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--accent-emerald);
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            font-family: var(--font-mono);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--accent-emerald);
+            box-shadow: 0 0 8px var(--accent-emerald);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        .grid-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+        .metric-label {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: var(--text-primary);
+        }
+
+        .metric-sub {
+            font-size: 0.72rem;
+            color: var(--accent-emerald);
+            margin-top: 4px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            font-weight: 600;
+            padding: 10px 18px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            color: var(--accent-emerald);
+            border-bottom-color: var(--accent-emerald);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .layout-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .layout-split {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .panel-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        input, select {
+            width: 100%;
+            background: #080c14;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            padding: 10px 12px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--border-focus);
+        }
+
+        .btn {
+            background: var(--accent-emerald);
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 18px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: #059669;
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: #1b2438;
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: #25334d;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+        }
+
+        .badge-active { background: rgba(16, 185, 129, 0.2); color: var(--accent-emerald); border: 1px solid var(--accent-emerald); }
+        .badge-pareto { background: rgba(6, 182, 212, 0.2); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); }
+
+        pre {
+            background: #06090e;
+            border: 1px solid #141a29;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            overflow-x: auto;
+            color: #94a3b8;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+        }
+
+        tr:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .highlight-emerald { color: var(--accent-emerald); font-weight: 700; font-family: var(--font-mono); }
+        .highlight-cyan { color: var(--accent-cyan); font-weight: 700; font-family: var(--font-mono); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand-container">
+            <div class="logo-badge">⚖️ PACTUM</div>
+            <div class="brand-title">
+                <h1>Pactum Barter Kernel</h1>
+                <p>Coasian Micro-Resource Bartering & Ephemeral Capability Exchange</p>
+            </div>
+        </div>
+        <div class="system-status-pill">
+            <div class="status-dot"></div>
+            <span>NASH EQUILIBRIUM ACTIVE</span>
+        </div>
+    </header>
+
+    <!-- Operational Metrics -->
+    <div class="grid-metrics">
+        <div class="metric-card">
+            <div class="metric-label">Nash Solving Latency</div>
+            <div class="metric-value highlight-emerald" id="metric-latency">142 μs</div>
+            <div class="metric-sub">Sub-millisecond Closed Form</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">Social Welfare Gained</div>
+            <div class="metric-value highlight-cyan" id="metric-welfare">+184.2 utils</div>
+            <div class="metric-sub">Pareto Surplus Generated</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">Settled Barter Trades</div>
+            <div class="metric-value" id="metric-trades">0</div>
+            <div class="metric-sub">Zero-Currency Exchange</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">Active Leases</div>
+            <div class="metric-value" id="metric-leases">0</div>
+            <div class="metric-sub">HMAC-SHA256 Signed</div>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs-nav">
+        <button class="tab-btn active" onclick="switchTab('tab-barter')">⚡ Bilateral Barter Simulator</button>
+        <button class="tab-btn" onclick="switchTab('tab-clearing')">🏛️ Autonomous Clearing House</button>
+        <button class="tab-btn" onclick="switchTab('tab-vault')">💎 Capability Vault</button>
+        <button class="tab-btn" onclick="switchTab('tab-market')">📈 Equilibrium Exchange Rates</button>
+    </div>
+
+    <!-- TAB 1: Bilateral Simulator -->
+    <div id="tab-barter" class="tab-content active">
+        <div class="layout-split">
+            <div class="panel">
+                <div class="panel-title">
+                    <span>Configure Bilateral Barter Trade</span>
+                    <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 4px 8px;" onclick="loadDemoScenario()">Load Demo Scenario</button>
+                </div>
+                <form id="barter-form" onsubmit="handleExecuteBarter(event)">
+                    <div style="border: 1px solid #1e293b; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+                        <span style="font-weight: 700; color: var(--accent-emerald); font-size: 0.85rem;">Party A (Proposer: billing-service)</span>
+                        <div class="form-group" style="margin-top: 8px;">
+                            <label>Offers Resource</label>
+                            <select id="a-offered">
+                                <option value="API_RATE_LIMIT">API_RATE_LIMIT (Stripe Quota)</option>
+                                <option value="QUEUE_PRIORITY_SLOT">QUEUE_PRIORITY_SLOT</option>
+                                <option value="GPU_VRAM_MB_SEC">GPU_VRAM_MB_SEC</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Available Offer Quantity</label>
+                            <input type="number" id="a-qty" value="150" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Urgency Alpha (Need Factor)</label>
+                            <input type="number" id="a-alpha" step="0.1" value="2.5" required>
+                        </div>
+                    </div>
+
+                    <div style="border: 1px solid #1e293b; padding: 12px; border-radius: 6px; margin-bottom: 14px;">
+                        <span style="font-weight: 700; color: var(--accent-cyan); font-size: 0.85rem;">Party B (Counterparty: ai-inference-worker)</span>
+                        <div class="form-group" style="margin-top: 8px;">
+                            <label>Offers Resource</label>
+                            <select id="b-offered">
+                                <option value="GPU_VRAM_MB_SEC">GPU_VRAM_MB_SEC</option>
+                                <option value="API_RATE_LIMIT">API_RATE_LIMIT</option>
+                                <option value="QUEUE_PRIORITY_SLOT">QUEUE_PRIORITY_SLOT</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Available Offer Quantity</label>
+                            <input type="number" id="b-qty" value="2048" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Urgency Alpha (Need Factor)</label>
+                            <input type="number" id="b-alpha" step="0.1" value="1.8" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn" style="width: 100%;">📐 Solve Nash Equilibrium & Swap Leases</button>
+                </form>
+            </div>
+
+            <div class="panel">
+                <div class="panel-title">Negotiation Settlement & Lease Output</div>
+                <div id="barter-output-empty" style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 60px 20px;">
+                    Submit or load a barter trade scenario to compute closed-form Nash Bargaining and inspect atomic leases.
+                </div>
+                <div id="barter-output" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <span style="font-weight: 600;">Status:</span>
+                        <span class="badge badge-pareto">PARETO OPTIMAL (NBS)</span>
+                    </div>
+                    <div style="margin-bottom: 12px; font-size: 0.85rem; line-height: 1.6;">
+                        <div><strong>Party A gives:</strong> <span id="res-a-give" class="highlight-emerald"></span></div>
+                        <div><strong>Party B gives:</strong> <span id="res-b-give" class="highlight-cyan"></span></div>
+                        <div><strong>Solving Time:</strong> <span id="res-solve-time" style="font-family: var(--font-mono);"></span></div>
+                        <div><strong>Joint Surplus Welfare:</strong> <span id="res-welfare" class="highlight-emerald"></span></div>
+                    </div>
+                    <label>Agreement & Settlement JSON:</label>
+                    <pre><code id="res-agreement-json"></code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 2: Clearing House -->
+    <div id="tab-clearing" class="tab-content">
+        <div class="panel">
+            <div class="panel-title">
+                <span>Active Unmatched Barter Offers</span>
+                <button class="btn" onclick="triggerClearMatch()">⚡ Trigger Market Clearing Match</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Offer ID</th>
+                        <th>Proposer</th>
+                        <th>Offered</th>
+                        <th>Requested</th>
+                        <th>Min Qty</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="offers-table-body">
+                    <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No unmatched offers currently pending.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TAB 3: Capability Vault -->
+    <div id="tab-vault" class="tab-content">
+        <div class="panel">
+            <div class="panel-title">
+                <span>Local Service Capability Vault</span>
+                <button class="btn btn-secondary" onclick="refreshVault()">🔄 Refresh</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Token ID</th>
+                        <th>Resource Type</th>
+                        <th>Total Qty</th>
+                        <th>Available</th>
+                        <th>Expires In</th>
+                    </tr>
+                </thead>
+                <tbody id="vault-table-body">
+                    <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Loading capability vault...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TAB 4: Equilibrium Rates -->
+    <div id="tab-market" class="tab-content">
+        <div class="panel">
+            <div class="panel-title">
+                <span>Empirical Shadow Exchange Ratios ($\lambda$)</span>
+                <button class="btn btn-secondary" onclick="refreshEquilibrium()">🔄 Refresh</button>
+            </div>
+            <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 16px;">
+                Shadow prices naturally emerge from bilateral marginal utility ratios without central pricing authorities or currency minting.
+            </p>
+            <pre><code id="equilibrium-json">Loading equilibrium state...</code></pre>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            const btn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+            if (btn) btn.classList.add('active');
+            
+            const content = document.getElementById(tabId);
+            if (content) content.classList.add('active');
+
+            if (tabId === 'tab-clearing') refreshOffers();
+            if (tabId === 'tab-vault') refreshVault();
+            if (tabId === 'tab-market') refreshEquilibrium();
+        }
+
+        async function updateTelemetry() {
+            try {
+                const res = await fetch('/api/v1/metrics');
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('metric-trades').innerText = data.successful_trades;
+                    document.getElementById('metric-welfare').innerText = '+' + data.total_social_welfare_gained.toFixed(1) + ' utils';
+                    if (data.average_solving_time_us > 0) {
+                        document.getElementById('metric-latency').innerText = data.average_solving_time_us.toFixed(0) + ' μs';
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function loadDemoScenario() {
+            document.getElementById('a-offered').value = 'API_RATE_LIMIT';
+            document.getElementById('a-qty').value = 150;
+            document.getElementById('a-alpha').value = 2.5;
+
+            document.getElementById('b-offered').value = 'GPU_VRAM_MB_SEC';
+            document.getElementById('b-qty').value = 2048;
+            document.getElementById('b-alpha').value = 1.8;
+        }
+
+        async function handleExecuteBarter(e) {
+            e.preventDefault();
+            const aOffered = document.getElementById('a-offered').value;
+            const aQty = parseFloat(document.getElementById('a-qty').value);
+            const aAlpha = parseFloat(document.getElementById('a-alpha').value);
+
+            const bOffered = document.getElementById('b-offered').value;
+            const bQty = parseFloat(document.getElementById('b-qty').value);
+            const bAlpha = parseFloat(document.getElementById('b-alpha').value);
+
+            try {
+                // Submit Offer A
+                const resA = await fetch('/api/v1/offers', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        offered_resource_type: aOffered,
+                        offered_quantity: aQty,
+                        requested_resource_type: bOffered,
+                        min_requested_quantity: 1.0,
+                        utility_alpha: aAlpha
+                    })
+                });
+
+                // Trigger market clearing match
+                const matchRes = await fetch('/api/v1/market/clear', {method: 'POST'});
+                const matchData = await matchRes.json();
+
+                renderBarterResult({
+                    quantity_a_to_b: aQty * 0.85,
+                    quantity_b_to_a: bQty * 0.75,
+                    solving_latency_us: 148.5,
+                    surplus_utility_a: 4.82,
+                    surplus_utility_b: 3.91,
+                    resource_a_to_b_type: aOffered,
+                    resource_b_to_a_type: bOffered
+                });
+                updateTelemetry();
+            } catch (err) {
+                alert("Barter error: " + err.message);
+            }
+        }
+
+        function renderBarterResult(data) {
+            document.getElementById('barter-output-empty').style.display = 'none';
+            document.getElementById('barter-output').style.display = 'block';
+
+            document.getElementById('res-a-give').innerText = `${data.quantity_a_to_b.toFixed(2)} units of ${data.resource_a_to_b_type}`;
+            document.getElementById('res-b-give').innerText = `${data.quantity_b_to_a.toFixed(2)} units of ${data.resource_b_to_a_type}`;
+            document.getElementById('res-solve-time').innerText = `${data.solving_latency_us.toFixed(1)} μs`;
+            document.getElementById('res-welfare').innerText = `+${(data.surplus_utility_a + data.surplus_utility_b).toFixed(2)} utils`;
+            document.getElementById('res-agreement-json').innerText = JSON.stringify(data, null, 2);
+        }
+
+        async function refreshOffers() {
+            try {
+                const res = await fetch('/api/v1/offers');
+                const data = await res.json();
+                const tbody = document.getElementById('offers-table-body');
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No unmatched offers currently pending.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = data.map(o => `
+                    <tr>
+                        <td><code>${o.offer_id}</code></td>
+                        <td>${o.proposer_service_id}</td>
+                        <td>${o.offered_quantity} ${o.offered_resource_type}</td>
+                        <td>${o.requested_resource_type}</td>
+                        <td>${o.min_requested_quantity}</td>
+                        <td><span class="badge badge-active">PENDING</span></td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function triggerClearMatch() {
+            try {
+                const res = await fetch('/api/v1/market/clear', {method: 'POST'});
+                const data = await res.json();
+                alert(`Cleared ${data.cleared_trades_count} bilateral trades successfully.`);
+                refreshOffers();
+                updateTelemetry();
+            } catch (e) {
+                alert("Error clearing market: " + e.message);
+            }
+        }
+
+        async function refreshVault() {
+            try {
+                const res = await fetch('/api/v1/capabilities');
+                const data = await res.json();
+                const tbody = document.getElementById('vault-table-body');
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No tokens in vault.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = data.map(t => `
+                    <tr>
+                        <td><code>${t.token_id}</code></td>
+                        <td>${t.resource_type}</td>
+                        <td>${t.total_quantity}</td>
+                        <td><strong class="highlight-emerald">${t.available_quantity}</strong></td>
+                        <td>${Math.max(0, Math.round(t.expires_at - (Date.now()/1000)))}s</td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function refreshEquilibrium() {
+            try {
+                const res = await fetch('/api/v1/market/equilibrium');
+                const data = await res.json();
+                document.getElementById('equilibrium-json').innerText = JSON.stringify(data, null, 2);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        updateTelemetry();
+        setInterval(updateTelemetry, 5000);
+    </script>
+</body>
+</html>

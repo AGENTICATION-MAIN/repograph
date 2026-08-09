@@ -1,24 +1,15 @@
 ---
 name: Bug Report
-about: Create a report to help us improve AegisKernel
+about: Create a report to help us improve Pactum
 title: '[BUG] '
 labels: bug
-assignees: ''
 ---
 
 ### Bug Description
-A clear and concise description of the defect or invariant evaluation anomaly.
+A clear and concise description of the defect or bargaining anomaly.
 
-### Steps to Reproduce
-1. Intent specification:
-2. Policy rule AST:
-3. Kernel configuration:
+### Reproduction Steps
+1. Service A utility profile:
+2. Service B utility profile:
+3. Offended barter offer:
 4. Execution output:
-
-### Expected Behavior
-A clear and concise description of what decision/receipt was expected.
-
-### Environment
-- AegisKernel Version:
-- Python Version:
-- Operating System:

@@ -1,19 +1,12 @@
 ---
 name: Feature Request
-about: Suggest an idea or new verification capability for AegisKernel
+about: Suggest an idea or new resource capability adapter for Pactum
 title: '[FEATURE] '
 labels: enhancement
-assignees: ''
 ---
 
 ### Problem Statement
-What autonomous agent safety, policy, or verification problem are you trying to solve?
+What cross-service allocative inefficiency or resource bottleneck are you trying to solve?
 
-### Proposed Solution
-A clear description of the invariant check, AST expression, or agent adapter mechanism.
-
-### Alternatives Considered
-What alternative approaches have been considered?
-
-### Security & Latency Impact
-Does this feature affect P99 evaluation latency (<2ms) or introduce new threat vectors?
+### Proposed Mechanism
+A description of the utility profile, capability token, or negotiation strategy.

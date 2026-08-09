@@ -1,18 +1,14 @@
-# Commercialization & Monetization Architecture
+# Commercialization & Economic Model
 
-## Ideal Customer Profile (ICP)
-1. **Fintech & Banking Platforms**: Deploying autonomous agents for loan servicing, wire verification, and fraud detection.
-2. **Healthcare & MedTech**: AI workflows handling EHR/PHI records with mandatory HIPAA & EU AI Act compliance.
-3. **Enterprise DevSecOps & Platform Teams**: Autonomous SRE runbook remediation agents modifying cloud infrastructure.
+## 1. Ideal Customer Profile (ICP)
+- **High-Growth Fintech & E-Commerce**: Microservice fleets hitting strict third-party API rate limits (Stripe, Plaid, Twilio, Shopify).
+- **AI Application Platforms**: High-cost LLM & GPU infrastructure where model token quotas and VRAM fragmentation cost $50k–$500k/month.
+- **Enterprise Platform Engineering Teams**: Kubernetes cluster operators looking to compress infrastructure spend by 40% through peer resource sharing.
 
-## Monetization Architecture (Open Core Model)
+## 2. Business Model (Open Core + Enterprise Control Plane)
 
-| Tier | Distribution | Features | Target |
+| Tier | Distribution | Capabilities | Target |
 |---|---|---|---|
-| **Community Edition (Open Source - Apache 2.0)** | GitHub / PyPI | Full standalone runtime, CBAC engine, AST policy DSL, Taint tracker, Shadow sandbox, Local Merkle ledger, REST API & UI. | Individual Developers, Startups, AI Researchers |
-| **Enterprise Edition** | Commercial License | Centralized Multi-Cluster Policy Governance, Distributed Merkle Consensus (Raft/BFT), SMT (Z3) Formal Invariant Prover, Okta/SAML SSO Federation, SIEM/Splunk Integrations, 24/7 SLA. | Mid-Market & Enterprise Companies ($50k–$250k ARR) |
-| **Managed Cloud (Aegis Cloud)** | SaaS / API Metering | Fully managed cryptographic audit ledger, multi-tenant compliance reporting dashboard, automated AI regulatory export (EU AI Act Article 14/15 reports). | AI Agent Platforms ($0.001 per verified tool invocation) |
-
-## Defensibility & Moat
-- **Cryptographic Audit Standard**: Merkle receipts create high switching costs; compliance auditors standardize on Aegis proof verification.
-- **AST Invariant & Taint Graph IP**: High performance (<1ms) multi-phase evaluation engine with formal attenuation safety guarantees.
+| **Community Edition (Apache 2.0)** | GitHub / PyPI | In-process Nash solver, local capability vault, bilateral barter coordinator, proxy decorator, CLI & REST API. | Individual engineers, startups, researchers. |
+| **Pactum Enterprise Mesh** | Commercial License | Multi-cluster eBPF network proxy, cross-region peer discovery, hardware GPU VRAM slicing integration, enterprise audit telemetry. | Mid-market & Enterprise ($40k–$180k ARR). |
+| **Pactum Cloud Clearinghouse** | SaaS / Usage Fee | Managed global clearing house for multi-tenant micro-barter across different cloud accounts / AWS regions. | Large multi-org clouds (0.01¢ per settled barter exchange). |

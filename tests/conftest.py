@@ -1,30 +1,31 @@
 """
-Pytest configuration and shared fixtures for AegisKernel test suite.
+Pytest fixtures and configuration for Pactum test suite.
 """
 
 import pytest
-from aegis.core.config import AegisConfig
-from aegis.core.kernel import AegisKernel
-from aegis.core.types import TaintLevel
+from pactum.core.config import PactumConfig
+from pactum.engine.kernel import PactumKernel
 
 
 @pytest.fixture
 def secret_key():
-    return "test-secret-key-32bytes-long-super-secure!"
+    return "test-pactum-secret-key-32bytes-long-super-secure!"
 
 
 @pytest.fixture
 def test_config(secret_key):
-    return AegisConfig(
+    return PactumConfig(
         environment="test",
         hmac_secret_key=secret_key,
-        strict_invariants=True,
-        taint_tracking_enabled=True,
-        db_path=":memory:",
-        default_rate_limit_per_minute=5000,
+        default_lease_ttl_seconds=120.0,
     )
 
 
 @pytest.fixture
-def kernel(test_config):
-    return AegisKernel(test_config)
+def kernel_a(test_config):
+    return PactumKernel("service-alpha", config=test_config)
+
+
+@pytest.fixture
+def kernel_b(test_config):
+    return PactumKernel("service-beta", config=test_config)

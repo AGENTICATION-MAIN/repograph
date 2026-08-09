@@ -1,55 +1,48 @@
-# AegisKernel REST API Reference
-
-The AegisKernel server exposes a high-performance REST API over HTTP/JSON.
+# Pactum REST API Reference
 
 ## Base URL
 `http://localhost:8000/api/v1`
 
 ## Endpoints
 
-### 1. Verify Tool Execution Intent
-- **Endpoint**: `POST /api/v1/verify`
+### 1. Mint Local Capability Tokens
+- **POST** `/api/v1/capabilities/mint`
 - **Request Body**:
   ```json
   {
-    "tool_name": "transfer_funds",
-    "arguments": { "recipient": "ACC-991", "amount": 250.0 },
-    "agent_id": "finance-bot",
-    "session_id": "session-100",
-    "capability_token_id": "cap-abc12345"
-  }
-  ```
-- **Response**: `200 OK`
-  ```json
-  {
-    "decision": "ALLOW",
-    "intent_id": "int-172323...",
-    "reason": "All security and policy invariants verified.",
-    "violations": [],
-    "evaluation_latency_ms": 0.45,
-    "merkle_node_hash": "a8f9c1...",
-    "merkle_root_hash": "e3b0c4..."
+    "resource_type": "API_RATE_LIMIT",
+    "quantity": 500.0,
+    "ttl_seconds": 300.0
   }
   ```
 
-### 2. Mint Capability Token
-- **Endpoint**: `POST /api/v1/capabilities/mint`
+### 2. Submit Barter Offer to Clearing House
+- **POST** `/api/v1/offers`
 - **Request Body**:
   ```json
   {
-    "subject_agent_id": "agent-01",
-    "session_id": "session-01",
-    "allowed_tools": ["query_db", "fetch_url"],
-    "max_invocations": 10,
-    "ttl_seconds": 3600
+    "offered_resource_type": "API_RATE_LIMIT",
+    "offered_quantity": 200.0,
+    "requested_resource_type": "GPU_VRAM_MB_SEC",
+    "min_requested_quantity": 1000.0,
+    "utility_alpha": 2.5
   }
   ```
 
-### 3. Merkle Ledger & Cryptographic Proofs
-- **Get Ledger**: `GET /api/v1/ledger?limit=50&offset=0`
-- **Generate Inclusion Proof**: `GET /api/v1/ledger/proof/{intent_id}`
-- **Verify Proof**: `POST /api/v1/ledger/verify-proof`
+### 3. Trigger Autonomous Market Clearing
+- **POST** `/api/v1/market/clear`
+- **Response**: Returns list of cleared bilateral trades, agreements, and atomic leases.
 
-### 4. Health & Telemetry
-- **Health Check**: `GET /api/v1/health`
-- **Telemetry Metrics**: `GET /api/v1/metrics`
+### 4. Consume Units from Leased Capability
+- **POST** `/api/v1/leases/consume`
+- **Request Body**:
+  ```json
+  {
+    "lease_id": "lease-abc12345",
+    "amount": 1.0
+  }
+  ```
+
+### 5. Market Equilibrium Snapshot
+- **GET** `/api/v1/market/equilibrium`
+- Returns current empirical shadow exchange rates and total social welfare gained.
