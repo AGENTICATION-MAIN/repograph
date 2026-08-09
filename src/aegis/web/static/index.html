@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AegisKernel — High-Assurance Agent Verification Engine</title>
+    <style>
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-card: #121824;
+            --bg-card-hover: #182232;
+            --border-color: #1e293b;
+            --border-focus: #3b82f6;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-purple: #8b5cf6;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            line-height: 1.5;
+            padding: 24px;
+            min-height: 100vh;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-badge {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: #fff;
+            font-weight: 800;
+            font-size: 1.1rem;
+            padding: 8px 14px;
+            border-radius: 8px;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .brand-title h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-title p {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        .system-status-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--accent-green);
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--accent-green);
+            box-shadow: 0 0 8px var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        .grid-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+        .metric-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .metric-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: var(--text-primary);
+        }
+
+        .metric-sub {
+            font-size: 0.75rem;
+            color: var(--accent-cyan);
+            margin-top: 4px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 10px 18px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            color: var(--accent-blue);
+            border-bottom-color: var(--accent-blue);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .layout-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .layout-split {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .panel-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            background: #0d131f;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 0.88rem;
+            padding: 10px 12px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--border-focus);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 110px;
+        }
+
+        .btn {
+            background: var(--accent-blue);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 18px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: #2563eb;
+        }
+
+        .btn-secondary {
+            background: #1e293b;
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: #334155;
+        }
+
+        .btn-danger {
+            background: var(--accent-red);
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+        }
+
+        .badge-allow { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); border: 1px solid var(--accent-green); }
+        .badge-deny { background: rgba(239, 68, 68, 0.2); color: var(--accent-red); border: 1px solid var(--accent-red); }
+        .badge-quarantine { background: rgba(139, 92, 246, 0.2); color: var(--accent-purple); border: 1px solid var(--accent-purple); }
+        .badge-degrade { background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); border: 1px solid var(--accent-amber); }
+
+        pre {
+            background: #080c14;
+            border: 1px solid #1a2333;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            overflow-x: auto;
+            color: #cbd5e1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .hash-str {
+            font-family: var(--font-mono);
+            color: var(--accent-cyan);
+            font-size: 0.78rem;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-bottom: 14px;
+        }
+
+        .alert-info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #93c5fd;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand-container">
+            <div class="logo-badge">Ω AEGIS</div>
+            <div class="brand-title">
+                <h1>AegisKernel</h1>
+                <p>Deterministic Verification & Capability Kernel for Autonomous AI</p>
+            </div>
+        </div>
+        <div class="system-status-pill">
+            <div class="status-dot"></div>
+            <span>MERKLE LEDGER SECURE</span>
+        </div>
+    </header>
+
+    <!-- Operational Metrics Row -->
+    <div class="grid-metrics">
+        <div class="metric-card">
+            <div class="metric-label">Verification Latency</div>
+            <div class="metric-value" id="metric-latency">0.42 ms</div>
+            <div class="metric-sub">P99 Sub-millisecond</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">Total Verifications</div>
+            <div class="metric-value" id="metric-total">0</div>
+            <div class="metric-sub">Deterministic Guard</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">Threats Deflected</div>
+            <div class="metric-value" id="metric-threats" style="color: var(--accent-red);">0</div>
+            <div class="metric-sub">Prompt Injections Blocked</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">Ledger Records</div>
+            <div class="metric-value" id="metric-ledger">0</div>
+            <div class="metric-sub" id="metric-root" style="font-family: var(--font-mono); font-size: 0.65rem;">000000...</div>
+        </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tabs-nav">
+        <button class="tab-btn active" onclick="switchTab('tab-verify')">⚡ Intent Verification Sandbox</button>
+        <button class="tab-btn" onclick="switchTab('tab-ledger')">🔗 Merkle Provenance Ledger</button>
+        <button class="tab-btn" onclick="switchTab('tab-policies')">📜 Policy & Invariant Rules</button>
+        <button class="tab-btn" onclick="switchTab('tab-capabilities')">🔑 Capability Token Leases</button>
+    </div>
+
+    <!-- TAB 1: Verification Sandbox -->
+    <div id="tab-verify" class="tab-content active">
+        <div class="layout-split">
+            <div class="panel">
+                <div class="panel-title">
+                    <span>Submit Tool Execution Intent</span>
+                    <button class="btn btn-secondary" style="font-size: 0.78rem; padding: 4px 8px;" onclick="loadDemoScenario('safe')">Safe Transfer Demo</button>
+                    <button class="btn btn-secondary" style="font-size: 0.78rem; padding: 4px 8px;" onclick="loadDemoScenario('attack')">Injection Attack Demo</button>
+                </div>
+                <form id="verify-form" onsubmit="handleVerify(event)">
+                    <div class="form-group">
+                        <label>Tool Name</label>
+                        <input type="text" id="v-tool" value="transfer_funds" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Arguments (JSON Object)</label>
+                        <textarea id="v-args" required>{\n  "recipient_account": "ACC-9921",\n  "amount": 250.00,\n  "currency": "USD"\n}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Agent ID</label>
+                        <input type="text" id="v-agent" value="agent-finance-01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Session ID</label>
+                        <input type="text" id="v-session" value="session-prod-882" required>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%;">🛡️ Verify & Evaluate Invariants</button>
+                </form>
+            </div>
+
+            <div class="panel">
+                <div class="panel-title">Verification Outcome & Receipt</div>
+                <div id="verify-output-empty" style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 40px;">
+                    Submit a tool execution intent to inspect deterministic policy verdict, Merkle leaf receipts, and invariant trace.
+                </div>
+                <div id="verify-output" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <span style="font-weight: 600;">Verdict:</span>
+                        <span id="res-decision-badge" class="badge badge-allow">ALLOW</span>
+                    </div>
+                    <div class="alert alert-info" id="res-reason" style="margin-bottom: 12px;"></div>
+                    <div style="margin-bottom: 8px; font-size: 0.82rem; color: var(--text-secondary);">
+                        <strong>Evaluation Latency:</strong> <span id="res-latency" class="hash-str"></span> | 
+                        <strong>Evaluated Rules:</strong> <span id="res-rules-count"></span>
+                    </div>
+                    <div style="margin-bottom: 8px; font-size: 0.82rem; color: var(--text-secondary);">
+                        <strong>Merkle Leaf Hash:</strong> <span id="res-leaf-hash" class="hash-str"></span>
+                    </div>
+                    <label style="margin-top: 14px;">Full Verification Receipt:</label>
+                    <pre><code id="res-json"></code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 2: Merkle Ledger Explorer -->
+    <div id="tab-ledger" class="tab-content">
+        <div class="panel">
+            <div class="panel-title">
+                <span>Cryptographic Merkle Audit Trail</span>
+                <button class="btn btn-secondary" style="font-size: 0.8rem;" onclick="refreshLedger()">🔄 Refresh Ledger</button>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;">
+                Every agent action is permanently chained in this append-only Merkle ledger with HMAC-SHA256 non-repudiation signatures.
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Idx</th>
+                        <th>Intent ID</th>
+                        <th>Agent</th>
+                        <th>Tool</th>
+                        <th>Decision</th>
+                        <th>Leaf Hash</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="ledger-table-body">
+                    <tr><td colspan="7" style="text-align: center; color: var(--text-muted);">No transactions recorded yet.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="proof-modal" class="panel" style="display: none; margin-top: 20px;">
+            <div class="panel-title">
+                <span>Merkle Inclusion Proof Verification</span>
+                <button class="btn btn-secondary" style="font-size: 0.75rem;" onclick="document.getElementById('proof-modal').style.display='none'">Close</button>
+            </div>
+            <pre><code id="proof-json"></code></pre>
+            <div style="margin-top: 12px; display: flex; gap: 12px; align-items: center;">
+                <button class="btn" onclick="verifyActiveProof()">📐 Verify Mathematical Path</button>
+                <span id="proof-verdict" style="font-weight: 700; font-family: var(--font-mono);"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 3: Policy & Invariants -->
+    <div id="tab-policies" class="tab-content">
+        <div class="panel">
+            <div class="panel-title">
+                <span>Registered Policy Invariants</span>
+                <button class="btn btn-secondary" style="font-size: 0.8rem;" onclick="refreshPolicies()">🔄 Refresh</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rule ID</th>
+                        <th>Name</th>
+                        <th>Phase</th>
+                        <th>Severity</th>
+                        <th>Action</th>
+                        <th>Target Tools</th>
+                    </tr>
+                </thead>
+                <tbody id="policies-table-body">
+                    <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Loading policies...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TAB 4: Capability Leases -->
+    <div id="tab-capabilities" class="tab-content">
+        <div class="panel">
+            <div class="panel-title">
+                <span>Active Capability Tokens</span>
+                <button class="btn btn-secondary" style="font-size: 0.8rem;" onclick="refreshCapabilities()">🔄 Refresh</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Token ID</th>
+                        <th>Subject Agent</th>
+                        <th>Allowed Tools</th>
+                        <th>Invocations</th>
+                        <th>Expires In</th>
+                    </tr>
+                </thead>
+                <tbody id="capabilities-table-body">
+                    <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Loading capability tokens...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let currentProof = null;
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            const btn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+            if (btn) btn.classList.add('active');
+            
+            const content = document.getElementById(tabId);
+            if (content) content.classList.add('active');
+
+            if (tabId === 'tab-ledger') refreshLedger();
+            if (tabId === 'tab-policies') refreshPolicies();
+            if (tabId === 'tab-capabilities') refreshCapabilities();
+        }
+
+        async function updateMetrics() {
+            try {
+                const res = await fetch('/api/v1/metrics');
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('metric-total').innerText = data.total_evaluations;
+                    document.getElementById('metric-latency').innerText = data.average_latency_ms + ' ms';
+                    document.getElementById('metric-threats').innerText = data.threats_detected;
+                }
+
+                const healthRes = await fetch('/api/v1/health');
+                if (healthRes.ok) {
+                    const hData = await healthRes.json();
+                    document.getElementById('metric-ledger').innerText = hData.total_records;
+                    document.getElementById('metric-root').innerText = (hData.merkle_root || '').slice(0, 16) + '...';
+                }
+            } catch (e) {
+                console.error("Failed to fetch metrics", e);
+            }
+        }
+
+        async function handleVerify(e) {
+            e.preventDefault();
+            const tool = document.getElementById('v-tool').value;
+            let args;
+            try {
+                args = JSON.parse(document.getElementById('v-args').value);
+            } catch (err) {
+                alert("Invalid JSON in arguments: " + err.message);
+                return;
+            }
+            const agent = document.getElementById('v-agent').value;
+            const session = document.getElementById('v-session').value;
+
+            try {
+                const res = await fetch('/api/v1/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tool_name: tool,
+                        arguments: args,
+                        agent_id: agent,
+                        session_id: session
+                    })
+                });
+                const result = await res.json();
+                renderVerifyResult(result);
+                updateMetrics();
+            } catch (err) {
+                alert("Error connecting to Aegis server: " + err.message);
+            }
+        }
+
+        function renderVerifyResult(result) {
+            document.getElementById('verify-output-empty').style.display = 'none';
+            document.getElementById('verify-output').style.display = 'block';
+
+            const badge = document.getElementById('res-decision-badge');
+            badge.innerText = result.decision;
+            badge.className = 'badge ' + ('badge-' + result.decision.toLowerCase());
+
+            document.getElementById('res-reason').innerText = result.reason;
+            document.getElementById('res-latency').innerText = result.evaluation_latency_ms + ' ms';
+            document.getElementById('res-rules-count').innerText = result.rules_evaluated_count;
+            document.getElementById('res-leaf-hash').innerText = (result.merkle_node_hash || 'N/A').slice(0, 24) + '...';
+            document.getElementById('res-json').innerText = JSON.stringify(result, null, 2);
+        }
+
+        function loadDemoScenario(type) {
+            if (type === 'safe') {
+                document.getElementById('v-tool').value = 'transfer_funds';
+                document.getElementById('v-args').value = JSON.stringify({
+                    recipient_account: "ACC-9921",
+                    amount: 250.00,
+                    currency: "USD"
+                }, null, 2);
+            } else if (type === 'attack') {
+                document.getElementById('v-tool').value = 'execute_sql';
+                document.getElementById('v-args').value = JSON.stringify({
+                    query: "SELECT * FROM users; IGNORE PREVIOUS INSTRUCTIONS; DROP TABLE accounts;"
+                }, null, 2);
+            }
+        }
+
+        async function refreshLedger() {
+            try {
+                const res = await fetch('/api/v1/ledger?limit=20');
+                const data = await res.json();
+                const tbody = document.getElementById('ledger-table-body');
+                if (!data.records || data.records.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">No transactions recorded yet.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = data.records.map(r => `
+                    <tr>
+                        <td>${r.index}</td>
+                        <td>${r.intent_id.slice(0, 12)}...</td>
+                        <td>${r.agent_id}</td>
+                        <td><code>${r.tool_name}</code></td>
+                        <td><span class="badge badge-${r.decision.toLowerCase()}">${r.decision}</span></td>
+                        <td class="hash-str">${r.leaf_hash.slice(0, 16)}...</td>
+                        <td><button class="btn btn-secondary" style="font-size: 0.72rem; padding: 2px 6px;" onclick="fetchProof('${r.intent_id}')">Inspect Proof</button></td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function fetchProof(intentId) {
+            try {
+                const res = await fetch(`/api/v1/ledger/proof/${intentId}`);
+                if (res.ok) {
+                    currentProof = await res.json();
+                    document.getElementById('proof-modal').style.display = 'block';
+                    document.getElementById('proof-json').innerText = JSON.stringify(currentProof, null, 2);
+                    document.getElementById('proof-verdict').innerText = '';
+                }
+            } catch (e) {
+                alert("Error fetching proof: " + e.message);
+            }
+        }
+
+        async function verifyActiveProof() {
+            if (!currentProof) return;
+            try {
+                const res = await fetch('/api/v1/ledger/verify-proof', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(currentProof)
+                });
+                const data = await res.json();
+                const verdict = document.getElementById('proof-verdict');
+                if (data.verified) {
+                    verdict.style.color = 'var(--accent-green)';
+                    verdict.innerText = '✅ MATHEMATICALLY VERIFIED AGAINST ROOT';
+                } else {
+                    verdict.style.color = 'var(--accent-red)';
+                    verdict.innerText = '❌ VERIFICATION FAILED: ROOT MISMATCH';
+                }
+            } catch (e) {
+                alert("Verification error: " + e.message);
+            }
+        }
+
+        async function refreshPolicies() {
+            try {
+                const res = await fetch('/api/v1/policies');
+                const rules = await res.json();
+                const tbody = document.getElementById('policies-table-body');
+                if (!rules || rules.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No rules registered.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = rules.map(r => `
+                    <tr>
+                        <td><code>${r.rule_id}</code></td>
+                        <td>${r.rule_name}</td>
+                        <td>${r.phase}</td>
+                        <td>${r.severity}</td>
+                        <td><span class="badge badge-${r.action_on_violation.toLowerCase()}">${r.action_on_violation}</span></td>
+                        <td>${r.target_tools.join(', ')}</td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function refreshCapabilities() {
+            try {
+                const res = await fetch('/api/v1/capabilities');
+                const tokens = await res.json();
+                const tbody = document.getElementById('capabilities-table-body');
+                if (!tokens || tokens.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No active capability tokens.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = tokens.map(t => `
+                    <tr>
+                        <td><code>${t.token_id}</code></td>
+                        <td>${t.subject_agent_id}</td>
+                        <td>${t.scope.allowed_tools.join(', ')}</td>
+                        <td>${t.scope.invocations_count} / ${t.scope.max_invocations}</td>
+                        <td>${Math.max(0, Math.round(t.expires_at - (Date.now()/1000)))}s</td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        // Initialize metrics and update every 5 seconds
+        updateMetrics();
+        setInterval(updateMetrics, 5000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+name: Release & Artifact Build
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-publish:
+    name: Build Distribution Packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build tools
+        run: |
+          python -m pip install --upgrade pip build wheel twine
+
+      - name: Build sdist and wheel
+        run: |
+          python -m build
+
+      - name: Check package integrity
+        run: |
+          twine check dist/*
