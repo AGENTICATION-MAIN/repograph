@@ -1,12 +1,12 @@
 ---
 name: Feature Request
-about: Suggest an idea or new resource capability adapter for Pactum
+about: Suggest a new language parser or risk rule for Repograph
 title: '[FEATURE] '
 labels: enhancement
 ---
 
-### Problem Statement
-What cross-service allocative inefficiency or resource bottleneck are you trying to solve?
+### Problem Description
+What manifest, language, or CI/CD vulnerability pattern should Repograph support?
 
-### Proposed Mechanism
-A description of the utility profile, capability token, or negotiation strategy.
+### Proposed Solution
+A description of the parsing logic and graph edge relationships.

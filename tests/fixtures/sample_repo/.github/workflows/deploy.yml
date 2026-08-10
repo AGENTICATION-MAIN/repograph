@@ -1,0 +1,22 @@
+name: Production Deployment Pipeline
+
+on:
+  pull_request_target:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Third Party Action
+        uses: untrusted-vendor/custom-deploy@master
+
+      - name: Deploy to Cloud
+        run: |
+          echo "Deploying application..."
+        env:
+          PROD_SECRET_KEY: ${{ secrets.PROD_API_KEY }}
+          DATABASE_PASSWORD: ${{ secrets.DB_PASSWORD }}

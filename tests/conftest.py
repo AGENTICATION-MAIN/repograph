@@ -1,31 +1,29 @@
 """
-Pytest fixtures and configuration for Pactum test suite.
+Pytest configuration and shared fixtures for Repograph test suite.
 """
 
+from pathlib import Path
 import pytest
-from pactum.core.config import PactumConfig
-from pactum.engine.kernel import PactumKernel
+from repograph.core.config import RepographConfig
+from repograph.graph.builder import GraphBuilder
 
 
 @pytest.fixture
-def secret_key():
-    return "test-pactum-secret-key-32bytes-long-super-secure!"
+def sample_repo_path():
+    return Path(__file__).parent / "fixtures" / "sample_repo"
 
 
 @pytest.fixture
-def test_config(secret_key):
-    return PactumConfig(
-        environment="test",
-        hmac_secret_key=secret_key,
-        default_lease_ttl_seconds=120.0,
+def test_config():
+    return RepographConfig(
+        max_file_size_bytes=1024 * 1024,
+        max_depth=15,
+        follow_symlinks=False,
     )
 
 
 @pytest.fixture
-def kernel_a(test_config):
-    return PactumKernel("service-alpha", config=test_config)
-
-
-@pytest.fixture
-def kernel_b(test_config):
-    return PactumKernel("service-beta", config=test_config)
+def sample_graph(sample_repo_path, test_config):
+    builder = GraphBuilder(sample_repo_path, test_config)
+    graph, summary = builder.build_graph()
+    return graph, summary

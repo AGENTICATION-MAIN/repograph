@@ -1,4 +1,4 @@
-.PHONY: install test benchmark demo serve examples docker-build clean
+.PHONY: install test benchmark scan sample clean docker-build
 
 install:
 	pip install -e ".[dev]"
@@ -7,22 +7,16 @@ test:
 	pytest -v --durations=10
 
 benchmark:
-	pactum benchmark -n 2000
+	pytest tests/benchmarks/ -v -s
 
-demo:
-	pactum demo
+scan:
+	repograph scan .
 
-serve:
-	pactum serve --host 0.0.0.0 --port 8000
-
-examples:
-	python examples/01_basic_two_service_barter.py
-	python examples/02_cross_api_rate_limit_rebalancing.py
-	python examples/03_gpu_vram_for_priority_queue_swap.py
-	python examples/04_dynamic_equilibrium_market.py
+sample:
+	repograph scan ./tests/fixtures/sample_repo
 
 docker-build:
-	docker build -t pactum-kernel:latest .
+	docker build -t repograph:latest .
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +

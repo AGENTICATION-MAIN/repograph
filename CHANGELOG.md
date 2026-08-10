@@ -1,16 +1,17 @@
 # Changelog
 
-All notable changes to Pactum will be documented in this file.
+All notable changes to Repograph will be documented in this file.
 
-## [0.1.0] - 2026-08-09
+## [0.1.0] - 2026-08-10
 
 ### Added
-- **Core Barter Kernel**: High-performance decentralized Coasian resource bartering runtime.
-- **Nash Bargaining Solver (NBS)**: Accelerated sub-millisecond solver maximizing the joint Nash Product over multi-variable logarithmic and exponential utility curves.
-- **Fractional Capability Units (FCUs)**: Cryptographically metered, consumable capability assets (`API_RATE_LIMIT`, `GPU_VRAM_MB_SEC`, `QUEUE_PRIORITY_SLOT`, `CACHE_RESIDENCY_SLOT`, `BURST_CPU_CREDIT`).
-- **Atomic Capability Handover Escrow (ACHE)**: Two-phase capability swap protocol ensuring atomic, zero-trust lease exchange with HMAC-SHA256 signatures.
-- **Quota Tracker & Capability Proxy**: Sliding-window consumption rate limiter and proxy interceptor with Python function decorator support.
-- **Decentralized Clearing House & Equilibrium Tracker**: Autonomous offer matching engine with real-time shadow price discovery ($\lambda$).
-- **REST API & Interactive Market Terminal UI**: FastAPI web server with embedded cybernetic market dashboard.
-- **CLI & Benchmark Suite**: `pactum serve`, `pactum benchmark`, `pactum demo`.
-- **Test Suite**: 21 automated tests covering unit, integration, adversarial attack vectors, and microsecond performance benchmarks.
+- **Core Repository Scanner**: Safe directory traversal with depth limiting and `.gitignore` support.
+- **Multi-Ecosystem Manifest Parsers**: Python (`requirements.txt`, `pyproject.toml`, `setup.py`), Node.js (`package.json`), Go (`go.mod`), and Rust (`Cargo.toml`).
+- **Source Code Import Parsers**: Python AST import extractor, JavaScript/TypeScript ESM and CommonJS extractor, Go and Rust import parsers.
+- **Configuration & Infrastructure Parsers**: `.env` file parser with secret heuristics, Dockerfile and Docker Compose topology parser.
+- **CI/CD Workflow Analyzer**: GitHub Actions static analyzer mapping steps, actions, trigger vectors, and secret access.
+- **Evidence-Backed Graph Model**: Directed multi-edge graph with node/edge taxonomies and traceable evidence metadata.
+- **Deterministic Risk Scoring Engine**: Graph centrality analysis, blast radius estimation, and heuristic supply-chain rules.
+- **CLI Commands**: `repograph scan`, `repograph analyze`, `repograph findings`, `repograph graph`, `repograph explain`, `repograph export`.
+- **Multi-Format Reporting**: Rich terminal tables, machine-readable JSON, Markdown security reports, Mermaid and DOT diagrams.
+- **Test Suite**: 23 automated tests covering unit, integration, benchmarks, and fixture repository scans.

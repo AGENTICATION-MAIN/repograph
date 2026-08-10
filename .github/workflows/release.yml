@@ -1,4 +1,4 @@
-name: Release & Artifact Build
+name: Release & Package Build
 
 on:
   push:

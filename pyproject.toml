@@ -3,52 +3,38 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pactum-kernel"
+name = "repograph"
 version = "0.1.0"
-description = "Coasian Micro-Resource Bartering & Ephemeral Capability Exchange Kernel for Distributed Systems"
+description = "Production-Grade Software Supply-Chain Intelligence Engine & Static Repository Analysis Graph"
 readme = "README.md"
 authors = [{ name = "Agentication-MAIN", email = "agentication-main@users.noreply.github.com" }]
 license = { text = "Apache-2.0" }
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "Intended Audience :: Science/Research",
     "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
-    "Topic :: System :: Distributed Computing",
-    "Topic :: Scientific/Engineering :: Mathematics",
-]
-keywords = [
-    "coase-theorem",
-    "nash-bargaining",
-    "micro-resource-bartering",
-    "capability-escrow",
-    "distributed-systems",
-    "rate-limit-rebalancing",
-    "pareto-efficiency",
+    "Topic :: Security",
+    "Topic :: Software Development :: Quality Assurance",
 ]
 requires-python = ">=3.10"
 dependencies = [
-    "fastapi>=0.110.0",
-    "uvicorn>=0.28.0",
-    "pydantic>=2.6.0",
     "rich>=13.7.0",
-    "cryptography>=42.0.0",
+    "pyyaml>=6.0.1",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0.0",
-    "httpx>=0.27.0",
     "pytest-cov>=4.1.0",
 ]
 
 [project.scripts]
-pactum = "pactum.cli.main:main"
+repograph = "repograph.cli.main:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

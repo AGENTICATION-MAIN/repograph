@@ -1,15 +1,16 @@
-## Description
-Summary of the changes introduced.
+## Summary
+Summary of changes in this PR.
 
-## Subsystem
-- [ ] Nash Bargaining Solver (NBS)
-- [ ] Capability Vault & Tokens
-- [ ] Atomic Capability Escrow (ACHE)
-- [ ] Quota Tracker & Proxy
-- [ ] Clearing House & Market Equilibrium
-- [ ] CLI & Terminal UI
+## Module Affected
+- [ ] Scanner (`repograph.scanner`)
+- [ ] Dependency Parsers (`repograph.parsers.dependencies`)
+- [ ] Import Parsers (`repograph.parsers.imports`)
+- [ ] Config & CI/CD Parsers (`repograph.parsers.config`, `repograph.parsers.cicd`)
+- [ ] Graph Model & Builder (`repograph.graph`)
+- [ ] Risk Engine & Rules (`repograph.risk`)
+- [ ] CLI & Reporting (`repograph.cli`, `repograph.reporting`)
 
-## Verification
-- [ ] Unit tests passing (`pytest tests/unit/`)
-- [ ] Benchmarks verified ($<500\mu\text{s}$ P50 latency)
+## Checklist
+- [ ] Unit tests added / passing (`pytest tests/unit/`)
+- [ ] Integration tests passing on fixture repo (`pytest tests/integration/`)
 - [ ] Documentation updated

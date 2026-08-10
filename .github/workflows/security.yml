@@ -1,4 +1,4 @@
-name: Security Audit & SAST
+name: Security Audit
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   security-scan:
-    name: Security & SAST Scanning
+    name: Security Scan
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository

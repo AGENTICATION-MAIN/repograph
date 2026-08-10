@@ -1,239 +1,161 @@
 <div align="center">
 
-# ⚖️ Pactum
+# 🔍 REPOGRAPH
 
-### **Coasian Micro-Resource Bartering & Ephemeral Capability Exchange Kernel for Distributed Systems**
+### **Production-Grade Software Supply-Chain Intelligence Engine & Static Repository Analysis Graph**
 
-[![CI Pipeline](https://github.com/AGENTICATION-MAIN/pactum-kernel/actions/workflows/ci.yml/badge.svg)](https://github.com/AGENTICATION-MAIN/pactum-kernel/actions/workflows/ci.yml)
-[![Security Audit](https://github.com/AGENTICATION-MAIN/pactum-kernel/actions/workflows/security.yml/badge.svg)](https://github.com/AGENTICATION-MAIN/pactum-kernel/actions/workflows/security.yml)
+[![CI Pipeline](https://github.com/AGENTICATION-MAIN/repograph/actions/workflows/ci.yml/badge.svg)](https://github.com/AGENTICATION-MAIN/repograph/actions/workflows/ci.yml)
+[![Security Audit](https://github.com/AGENTICATION-MAIN/repograph/actions/workflows/security.yml/badge.svg)](https://github.com/AGENTICATION-MAIN/repograph/actions/workflows/security.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![Solving Latency](https://img.shields.io/badge/Nash_Solver-<500μs-brightgreen.svg)]()
-[![Game Theory](https://img.shields.io/badge/Pareto_Optimal-100%25_Proven-purple.svg)]()
+[![Deterministic](https://img.shields.io/badge/Risk_Engine-100%25_Deterministic-brightgreen.svg)]()
+[![Local-First](https://img.shields.io/badge/Privacy-100%25_Offline-purple.svg)]()
 
 <p align="center">
-  <b>Decentralized Coasian Barter</b> • 
-  <b>Sub-Millisecond Nash Bargaining (NBS)</b> • 
-  <b>Atomic Capability Escrow (ACHE)</b> • 
-  <b>Fractional Capability Units</b> • 
-  <b>Dynamic Shadow Price Discovery</b>
+  <b>Multi-Ecosystem Dependency Graphs</b> • 
+  <b>CI/CD Action Poisoning Detection</b> • 
+  <b>Source Code Import Tracking</b> • 
+  <b>Traceable Evidence on Every Edge</b> • 
+  <b>Zero Code Execution</b>
 </p>
 
 </div>
 
 ---
 
-## ⚡ The Allocative Crisis in Distributed Systems
+## ⚡ Overview
 
-In modern cloud computing, microservice fleets, and autonomous agent swarms, computational resources and third-party API quotas are statically siloed:
-- **Service A (e.g. `billing-worker`)**: Allocated 1,000 requests/min Stripe API quota, but using only 50 req/min ($950\text{ idle tokens/min}$).
-- **Service B (e.g. `checkout-service`)**: Experiences a traffic spike and hits `HTTP 429 Too Many Requests`, dropping revenue transactions.
-- **Service C (e.g. `analytics-pipeline`)**: Has 16GB of idle GPU VRAM on an expensive AWS instance, but is blocked waiting for queue priority slots owned by Service D.
+**Repograph** is a fast, local-first, production-grade static repository analysis engine. It traverses software codebases without executing code, builds an evidence-backed property graph of all files, dependencies, imports, configuration parameters, and CI/CD pipelines, and computes deterministic supply-chain risk scores.
 
-**Today's Broken Solutions:**
-1. **Static 5x Over-Provisioning**: Companies spend billions over-allocating cloud capacity that sits idle 80% of the time.
-2. **Centralized Redis Rate Limiters**: Single point of failure that throttles callers without understanding cross-service urgency.
-3. **Cluster Autoscalers (KEDA / Karpenter)**: Takes 30–120 seconds to spin up new VMs—far too slow for millisecond-scale API bursts.
+### Why Repograph?
+- **100% Static & Safe**: Zero code execution, zero `eval()`, zero dependency installation. Safely inspect completely untrusted repositories.
+- **Multi-Ecosystem Graph**: Simultaneously cross-links Python (`requirements.txt`, `pyproject.toml`), Node.js (`package.json`), Go (`go.mod`), Rust (`Cargo.toml`), Docker, and GitHub Actions in a unified graph.
+- **Traceable Evidence on Every Edge**: Every single relationship contains the source file, line number, extraction method, and snippet.
+- **Deterministic Risk Engine**: Assigns explainable risk ratings based on graph reachability, dependency centrality, blast radius, and supply-chain vulnerabilities (`pull_request_target` secret exposure, unpinned 3rd-party actions, circular imports).
 
 ---
 
-## 🏛️ The Pactum Invention: Coasian Micro-Resource Barter
-
-Pactum introduces a new systems primitive based on Ronald Coase's Nobel prize-winning economic theorem:
-> *If transaction costs are zero and property rights are well-defined, autonomous economic agents will negotiate Pareto-optimal resource allocations regardless of initial distribution.*
-
-Pactum reduces cross-service resource negotiation transaction costs to **$<500\mu\text{s}$**:
-1. Services declare **Marginal Utility Curves** $U(x)$ (diminishing returns, SLA urgency).
-2. The **Closed-Form Nash Bargaining Solver (NBS)** computes the exact Pareto-optimal trade quantities $(\Delta q_A^*, \Delta q_B^*)$ that maximize joint social welfare in $<500\mu\text{s}$.
-3. The **Atomic Capability Handover Escrow (ACHE)** executes a two-phase cryptographic swap of HMAC-SHA256 signed capability leases with automatic TTL expiration.
-4. **Zero Currency Required**: Pure barter eliminates monetary friction, inflation management, and central banking bottlenecks.
-
----
-
-## 📐 Architecture & Data Flow
+## 🏛️ System Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                             PACTUM BARTER MESH                              │
+│                             REPOGRAPH ENGINE                                │
 │                                                                             │
 │  ┌───────────────────────┐                    ┌──────────────────────────┐  │
-│  │   Service A (Billing) │                    │   Service B (Inference)  │  │
+│  │   File Walker Module  │                    │ Multi-Ecosystem Parsers  │  │
 │  │ ┌───────────────────┐ │                    │ ┌──────────────────────┐ │  │
-│  │ │ Capability Vault  │ │                    │ │ Capability Vault     │ │  │
-│  │ │ (Excess API Qs)   │ │                    │ │ (Excess GPU VRAM)    │ │  │
-│  │ └─────────┬─────────┘ │                    │ └──────────┬───────────┘ │  │
-│  │           │           │                    │            │             │  │
-│  │ ┌─────────▼─────────┐ │                    │ ┌──────────▼───────────┐ │  │
-│  │ │  Utility Profile  │ │                    │ │  Utility Profile     │ │  │
-│  │ │ (Urgency Curve)   │ │                    │ │ (Urgency Curve)      │ │  │
-│  │ └─────────┬─────────┘ │                    │ └──────────┬───────────┘ │  │
-│  └───────────┼───────────┘                    └────────────┼─────────────┘  │
+│  │ │ Ignore Matcher    │ │                    │ │ Python (reqs/pyproj) │ │  │
+│  │ │ (.gitignore/defs) │ │                    │ │ Node (package.json)  │ │  │
+│  │ └─────────┬─────────┘ │                    │ │ Go (go.mod) / Rust   │ │  │
+│  │           │           │                    │ │ Docker / Compose     │ │  │
+│  │ ┌─────────▼─────────┐ │                    │ │ CI/CD GitHub Actions │ │  │
+│  │ │ Metadata Collector│ │                    │ │ Env / Secrets        │ │  │
+│  │ │ (MIME/Size/SHA)   │ │                    │ └──────────┬───────────┘ │  │
+│  │ └─────────┬─────────┘ │                    └────────────┼─────────────┘  │
+│  └───────────┼───────────┘                                 │                │
 │              │                                             │                │
 │              ▼                                             ▼                │
 │  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │               CLOSED-FORM NASH BARGAINING SOLVER (NBS)                │  │
-│  │       Max (U_A(q_B) - c_A - d_A) * (U_B(q_A) - c_B - d_B) in <500μs   │  │
-│  └───────────────────────────────────┬───────────────────────────────────┘  │
-│                                      │                                      │
-│                                      ▼                                      │
-│  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │             ATOMIC CAPABILITY HANDOVER ESCROW (ACHE)                  │  │
-│  │    Two-Phase Lock -> HMAC-SHA256 Signed Leases -> Quota Commitment    │  │
+│  │                     GRAPH BUILDER & MODEL ENGINE                      │  │
+│  │  Nodes: Repo, File, Dir, Module, Package, Dependency, Workflow, Config │  │
+│  │  Edges: CONTAINS, IMPORTS, DEPENDS_ON, EXECUTES, CONFIGURES, TRUSTS   │  │
+│  │  Evidence: Source File, Line Number, Method, Confidence Score         │  │
 │  └───────────────────────────────────┬───────────────────────────────────┘  │
 │                                      │                                      │
 │              ┌───────────────────────┴───────────────────────┐              │
 │              ▼                                               ▼              │
 │  ┌───────────────────────┐                    ┌──────────────────────────┐  │
-│  │ Leased GPU Capability │                    │ Leased API Rate Limit    │  │
-│  │ Active on Service A   │                    │ Active on Service B      │  │
+│  │ Risk Scoring Engine   │                    │ Query & Reporting Engine │  │
+│  │ Centrality & Blast    │                    │ Rich CLI Formatter       │  │
+│  │ CI/CD Poisoning Rules │                    │ JSON / Markdown Exporter │  │
+│  │ Secret Exposure Rules │                    │ Mermaid / DOT Visualizer │  │
 │  └───────────────────────┘                    └──────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 📊 Performance Benchmarks
-
-| Metric | Pactum Barter Kernel | Centralized Redis Limiter | Kubernetes Cluster Autoscaler |
-|---|---|---|---|
-| **Negotiation / Reallocation Latency** | **$411.9\mu\text{s}$ (P50)** | $2.5\text{ ms}$ (Fixed throttle) | $45–120\text{ seconds}$ |
-| **Solving Throughput** | **$2,257.5\text{ trades/sec}$** | N/A | N/A |
-| **Cross-Resource Arbitrage** | **Yes (Rate Limits $\leftrightarrow$ GPU $\leftrightarrow$ Queue)** | No | No |
-| **Pareto Optimality Guarantee** | **100.0% (Mathematical Proof)** | No | No |
-| **Monetary Friction** | **Zero Currency (Pure Barter)** | N/A | High Cloud Bill |
-| **Zero-Trust Security** | **HMAC-SHA256 Signed Leases** | Shared Secret | Cluster Admin |
-
----
-
-## 🚀 Quickstart
-
-### 1. Installation
+## 🚀 Quickstart & Installation
 
 ```bash
-pip install pactum-kernel
+git clone https://github.com/AGENTICATION-MAIN/repograph.git
+cd repograph
+pip install -e .
 ```
 
-Or install in development mode:
+### Primary Command: Scan a Repository
 
 ```bash
-git clone https://github.com/AGENTICATION-MAIN/pactum-kernel.git
-cd pactum-kernel
-pip install -e ".[dev]"
+repograph scan ./my-project
 ```
 
-### 2. Two-Service Bilateral Barter Example
-
-```python
-from pactum import PactumKernel, ResourceType, UtilityBuilder
-
-# 1. Initialize two peer microservices
-billing_service = PactumKernel("billing-service")
-inference_worker = PactumKernel("inference-worker")
-
-# 2. Billing service has 500 idle Stripe API tokens/min
-billing_service.mint_capability(ResourceType.API_RATE_LIMIT, quantity=500.0)
-
-# 3. Inference worker has 4,096 MB-sec of idle GPU VRAM
-inference_worker.mint_capability(ResourceType.GPU_VRAM_MB_SEC, quantity=4096.0)
-
-# 4. Define marginal urgency profiles
-u_billing = UtilityBuilder.priority_queue_urgency(p99_latency_sla_ms=30.0, current_queue_depth=15)
-u_inference = UtilityBuilder.rate_limit_urgency(current_deficit_rate=120.0)
-
-# 5. Execute bilateral Nash Bargaining (<500μs)
-agreement, lease_billing, lease_inference = billing_service.execute_bilateral_barter(
-    peer_kernel=inference_worker,
-    my_offer_type=ResourceType.API_RATE_LIMIT,
-    my_offer_qty=500.0,
-    my_requested_type=ResourceType.GPU_VRAM_MB_SEC,
-    my_utility=u_billing,
-    peer_utility=u_inference,
-)
-
-print(f"Trade Ratified in {agreement.solving_latency_us:.1f} μs!")
-print(f"Billing Service acquired GPU VRAM Lease: {lease_billing.lease_id}")
-print(f"Inference Worker acquired Stripe Rate Limit Lease: {lease_inference.lease_id}")
+Output:
 ```
-
-### 3. Function Guard Decorator
-
-```python
-from pactum import PactumKernel
-from pactum.adapters import pactum_barter_guard
-
-kernel = PactumKernel("my-service")
-
-@pactum_barter_guard(kernel=kernel, lease_id_provider=lambda: "lease-active-123", cost_amount=1.0)
-def call_expensive_gpu_endpoint():
-    # Executes transparently through active bartered lease quota
-    return "GPU Inference 200 OK"
+Repository Scan Summary — CRITICAL RISK (100.0/100)
+┏━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Category                ┃                                     Count ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Total Files Scanned     │                                        13 │
+│ Total Graph Nodes       │                                        47 │
+│ Total Graph Edges       │                                        57 │
+│ Discovered Dependencies │                                        16 │
+│ CI/CD Workflows         │                                         1 │
+│ Ecosystems Detected     │ docker, pypi, npm, github-actions, golang │
+│ Scan Duration           │                                    5.6 ms │
+└─────────────────────────┴───────────────────────────────────────────┘
 ```
 
 ---
 
-## 🖥️ Interactive Market Terminal & REST API
+## 💻 CLI Command Reference
 
-Launch the local market node and terminal:
-
-```bash
-pactum serve --host 0.0.0.0 --port 8000
-```
-
-- **Interactive Market Terminal**: Open `http://localhost:8000` to configure bilateral trades, view real-time Edgeworth box contract curves, and trigger autonomous clearing house matches.
-- **REST API Docs (Swagger UI)**: Open `http://localhost:8000/docs`.
-
----
-
-## 💻 CLI Commands
-
-```bash
-# Start server and UI
-pactum serve --port 8000
-
-# Run Nash Bargaining Solver microsecond benchmark
-pactum benchmark -n 2000
-
-# Run interactive cross-service capability barter demo
-pactum demo
-```
+| Command | Description | Example |
+|---|---|---|
+| `repograph scan PATH` | Full scan, graph construction, and findings report | `repograph scan .` |
+| `repograph scan PATH --json` | Output machine-readable JSON | `repograph scan . --json` |
+| `repograph findings PATH` | Display table of ranked risk findings | `repograph findings .` |
+| `repograph explain ID` | Forensic deep-dive on a specific finding ID | `repograph explain FIND-C4C89850` |
+| `repograph graph PATH` | Export graph in Mermaid, DOT, or JSON format | `repograph graph . --format mermaid` |
+| `repograph export PATH` | Generate Markdown or JSON security report | `repograph export . -o REPORT.md` |
 
 ---
 
-## 🧪 Comprehensive Verification Suite
+## 🛡️ Deterministic Risk Rules
 
-Pactum includes 21 automated tests covering unit, integration, adversarial attack vectors, and microsecond performance benchmarks:
+| Rule ID | Severity | Description |
+|---|---|---|
+| `RULE_CICD_PULL_REQUEST_TARGET_SECRET_EXPOSURE` | **CRITICAL** | Workflows triggered on `pull_request_target` accessing repository secrets (action poisoning vector). |
+| `RULE_PLAINTEXT_SECRET_IN_CONFIG` | **HIGH** | Hardcoded plaintext API keys / passwords committed in configuration files. |
+| `RULE_UNPINNED_THIRD_PARTY_ACTION` | **HIGH** | Third-party GitHub actions using mutable branch tags instead of 40-char commit SHAs. |
+| `RULE_UNPINNED_DOCKER_BASE` | **MEDIUM** | Container images using `:latest` or untagged base images. |
+| `RULE_CIRCULAR_DEPENDENCY_CYCLE` | **MEDIUM** | Circular import chains ($A \to B \to C \to A$) causing deadlocks and architectural coupling. |
+| `RULE_HIGH_CENTRALITY_DEPENDENCY_BOTTLENECK` | **LOW** | High in-degree dependencies representing single points of failure. |
+
+---
+
+## 🧪 Verification & Test Suite
+
+Repograph includes 23 automated tests covering parsers, graph construction, centrality, and fixture repository scans:
 
 ```bash
-# Run test suite
 pytest -v
-
-# Run adversarial defense tests
-pytest tests/adversarial/ -v
-
-# Run microsecond latency benchmarks
-pytest tests/benchmarks/ -v
 ```
 
 ---
 
 ## 📚 Documentation Index
 
-- [Novelty & Prior-Art Analysis](docs/product/novelty_analysis.md)
-- [Product Thesis: The Coasian Cloud](docs/product/product_thesis.md)
-- [Commercialization & Economic Model](docs/product/commercial_model.md)
-- [Competitive Landscape & Moat](docs/product/competitive_landscape.md)
-- [Nash Bargaining Engine Mathematics](docs/architecture/nash_bargaining_engine.md)
-- [Atomic Capability Escrow Protocol (ACHE)](docs/architecture/capability_escrow_protocol.md)
-- [Marginal Utility Curves](docs/architecture/marginal_utility_curves.md)
-- [Dynamic Market Clearing & Shadow Prices](docs/architecture/dynamic_market_clearing.md)
-- [REST API Reference](docs/api/rest_api_reference.md)
-- [Python SDK Reference](docs/api/python_sdk.md)
-- [Architecture Specification](ARCHITECTURE.md)
-- [Security & Threat Model](SECURITY.md)
+- [Architecture Overview](docs/architecture/overview.md)
+- [Graph Model & Taxonomy](docs/architecture/graph_model.md)
+- [Deterministic Risk Scoring](docs/architecture/risk_scoring_engine.md)
+- [Parser Specifications](docs/architecture/parser_specifications.md)
+- [CLI Usage Guide](docs/usage/cli_guide.md)
+- [Export Formats](docs/usage/export_formats.md)
+- [Security & Threat Model](docs/security/threat_model.md)
 
 ---
 
 ## ⚖️ License
 
-Pactum is open-source software licensed under the [Apache License, Version 2.0](LICENSE).
+Repograph is licensed under the [Apache License, Version 2.0](LICENSE).
 Copyright 2026 Agentication-MAIN.
