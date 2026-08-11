@@ -4,7 +4,6 @@ Rust Cargo Dependency Parser (Cargo.toml).
 
 from __future__ import annotations
 
-import tomllib
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -16,6 +15,7 @@ from repograph.core.types import (
     NodeType,
 )
 from repograph.parsers.base import BaseParser
+from repograph.parsers.config.toml_loader import safe_load_toml
 
 
 class RustDependencyParser(BaseParser):
@@ -32,11 +32,7 @@ class RustDependencyParser(BaseParser):
     ) -> List[Tuple[GraphNode, GraphEdge]]:
         results: List[Tuple[GraphNode, GraphEdge]] = []
         file_node_id = f"file:{relative_path}"
-
-        try:
-            data = tomllib.loads(content)
-        except Exception:
-            return results
+        data = safe_load_toml(content)
 
         sections = [
             ("dependencies", "runtime"),

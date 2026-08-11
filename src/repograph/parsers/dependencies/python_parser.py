@@ -5,7 +5,6 @@ Python Dependency Manifest Parser (requirements.txt, pyproject.toml, setup.py).
 from __future__ import annotations
 
 import re
-import tomllib
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -17,6 +16,7 @@ from repograph.core.types import (
     NodeType,
 )
 from repograph.parsers.base import BaseParser
+from repograph.parsers.config.toml_loader import safe_load_toml
 
 
 class PythonDependencyParser(BaseParser):
@@ -38,7 +38,6 @@ class PythonDependencyParser(BaseParser):
         relative_path: str,
         content: str,
     ) -> List[Tuple[GraphNode, GraphEdge]]:
-        """Extracts dependency nodes and DEPENDS_ON edges."""
         results: List[Tuple[GraphNode, GraphEdge]] = []
         name = file_path.name.lower()
 
@@ -64,7 +63,6 @@ class PythonDependencyParser(BaseParser):
             line_no_comment = line.split("#")[0].strip()
             line_clean = line_no_comment.split(";")[0].strip()
 
-            # Extract package name and version: e.g. "fastapi>=0.110.0", "requests==2.31.0", "pydantic"
             match = re.match(r"^([a-zA-Z0-9_\-\.]+)(.*)$", line_clean)
             if match:
                 pkg_name = match.group(1).lower().replace("_", "-")
@@ -102,17 +100,13 @@ class PythonDependencyParser(BaseParser):
     def _parse_pyproject_toml(self, relative_path: str, content: str) -> List[Tuple[GraphNode, GraphEdge]]:
         results = []
         file_node_id = f"file:{relative_path}"
-
-        try:
-            data = tomllib.loads(content)
-        except Exception:
-            return results
+        data = safe_load_toml(content)
 
         # 1. Standard PEP 621 [project.dependencies]
         dependencies = data.get("project", {}).get("dependencies", [])
         if isinstance(dependencies, list):
             for dep_str in dependencies:
-                match = re.match(r"^([a-zA-Z0-9_\-\.]+)(.*)$", dep_str.strip())
+                match = re.match(r"^([a-zA-Z0-9_\-\.]+)(.*)$", str(dep_str).strip())
                 if match:
                     pkg_name = match.group(1).lower().replace("_", "-")
                     constraint = match.group(2).strip() or "*"
@@ -131,7 +125,7 @@ class PythonDependencyParser(BaseParser):
                             source_file=relative_path,
                             extraction_method="pep621_pyproject_toml",
                             confidence_score=1.0,
-                            snippet=dep_str,
+                            snippet=str(dep_str),
                         ),
                         metadata={"version_constraint": constraint},
                     )
@@ -141,9 +135,9 @@ class PythonDependencyParser(BaseParser):
         poetry_deps = data.get("tool", {}).get("poetry", {}).get("dependencies", {})
         if isinstance(poetry_deps, dict):
             for pkg, spec in poetry_deps.items():
-                if pkg.lower() == "python":
+                if str(pkg).lower() == "python":
                     continue
-                pkg_name = pkg.lower().replace("_", "-")
+                pkg_name = str(pkg).lower().replace("_", "-")
                 constraint = spec if isinstance(spec, str) else str(spec.get("version", "*"))
                 dep_node_id = f"pkg:pypi/{pkg_name}"
                 dep_node = GraphNode(
@@ -172,7 +166,6 @@ class PythonDependencyParser(BaseParser):
         results = []
         file_node_id = f"file:{relative_path}"
 
-        # Match install_requires=[...]
         match = re.search(r"install_requires\s*=\s*\[(.*?)\]", content, re.DOTALL)
         if match:
             block = match.group(1)
